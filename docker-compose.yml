@@ -1,0 +1,81 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:1.19.2
+    container_name: board-loc-nginx
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./storage/logs/webserver:/var/log/nginx
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8081:443"
+    links:
+      - php-fpm
+
+  mysql:
+    container_name: board-loc-mysql
+    image: "mysql:5"
+    volumes:
+      - ./storage/docker/mysql:/var/lib/mysql
+      - ./storage/logs/mysql:/var/log/mysql
+      - ./docker/my.cnf:/etc/mysql/conf.d/custom.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
+    ports:
+      - 33061:3306
+
+  redis:
+    container_name: board-loc-redis
+    image: "redis:6.0"
+    ports:
+      - 63791:6379
+
+  php-fpm:
+    container_name: board-loc-php-fpm
+    build:
+      context: ./
+      dockerfile: docker/php-fpm.docker
+    volumes:
+      - ./:/var/www
+      - ./storage/logs/webserver:/var/log/nginx
+    links:
+      - mysql
+      - redis
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  php-cli:
+    container_name: board-loc-php-cli
+    build:
+      context: ./
+      dockerfile: docker/php-cli.docker
+    volumes:
+      - ./:/var/www
+      - ./storage/logs/webserver:/var/log/nginx
+    links:
+      - mysql
+      - redis
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    tty: true
+
+  node:
+    container_name: board-loc-node
+    image: node:current-alpine
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    tty: true
