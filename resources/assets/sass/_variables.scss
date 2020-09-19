@@ -3,18 +3,18 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: "Nunito", sans-serif;
+$font-family-sans-serif: "Arial", sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
 // Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66D9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
+$blue: transparentize(#3490dc, .7);
+$indigo: transparentize(#6574cd, .7);
+$purple: transparentize(#9561e2, .7);
+$pink: transparentize(#f66D9b, .7);
+$red: transparentize(#e3342f, .7);
+$orange: transparentize(#f6993f, .7);
+$yellow: transparentize(#ffed4a, .7);
+$green: transparentize(#38c172, .7);
+$teal: transparentize(#4dc0b5, .7);
+$cyan: transparentize(#6cb2eb, .7);
