@@ -10,13 +10,6 @@
 
     <title>Adverts</title>
 
-    <!-- Scripts -->
-    <script src="{{ mix('js/app.js','build') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
     <!-- Styles -->
     <link href="{{ mix('css/app.css','build') }}" rel="stylesheet">
 </head>
@@ -79,6 +72,12 @@
 
 <main class="app-content py-4">
     <div class="container">
+
+        @section('breadcrumbs', Breadcrumbs::render())
+        @yield('breadcrumbs')
+
+        @include('layouts.partials.flash')
+
         @yield('content')
     </div>
 </main>
@@ -92,6 +91,9 @@
         </div>
     </div>
 </footer>
+
+<!-- Scripts -->
+<script src="{{ mix('js/app.js','build') }}" defer></script>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ services:
     image: nginx:1.19.2
     container_name: board-loc-nginx
     working_dir: /var/www
+    restart: unless-stopped
     volumes:
       - ./:/var/www
       - ./storage/logs/webserver:/var/log/nginx

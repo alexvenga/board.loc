@@ -29,7 +29,7 @@ queue:
 	docker-compose exec php-cli php artisan queue:work
 
 perm:
-	sudo chgrp -R www-data storage bootstrap/cache
-	sudo chmod -R ug+rwx storage bootstrap/cache
-	sudo chmod -R ug+rwx storage node_modules
-	sudo chmod -R ug+rwx storage public/build
+#	sudo chgrp -R www-data storage bootstrap/cache
+	sudo chmod -R 777 storage bootstrap/cache
+	sudo chmod -R 777 storage node_modules
+	sudo chmod -R 777 storage public/build
