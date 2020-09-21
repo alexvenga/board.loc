@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Admin panel</div>
-
-                <div class="card-body">
-
-                    You are in admin panel!
-                </div>
-            </div>
-        </div>
-    </div>
+    <ul class="nav nav-tabs mb-2">
+        <li class="nav-item">
+            <a class="nav-link active"
+               href="{{ route('admin.home') }}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"
+               href="{{ route('admin.users.index') }}">Users</a>
+        </li>
+    </ul>
 @endsection

@@ -1,16 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Admin users</div>
 
-                <div class="card-body">
+    @include('admin.users.partials.nav')
 
-                    You are in admin panel!
-                </div>
-            </div>
-        </div>
-    </div>
+    @php /** @var \App\Models\User[] $users */ @endphp
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Status
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($users as $user)
+            <tr>
+                <td>
+                    {{ $user->id }}
+                </td>
+                <td>
+                    <a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a>
+                </td>
+                <td>
+                    {{ $user->email }}
+                </td>
+                <td>
+                    @if ($user->status === \App\Models\User::STATUS_WAIT)
+                        <span class="badge badge-secondary">Waiting</span>
+                    @endif
+                    @if ($user->status === \App\Models\User::STATUS_ACTIVE)
+                        <span class="badge badge-primary">Active</span>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+
+    {{ $users->links() }}
+
 @endsection

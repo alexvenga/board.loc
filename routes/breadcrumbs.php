@@ -53,6 +53,6 @@ Breadcrumbs::register('admin.users.show', function (BreadcrumbsGenerator $crumbs
 });
 
 Breadcrumbs::register('admin.users.edit', function (BreadcrumbsGenerator $crumbs, User $user) {
-    $crumbs->parent('admin.users.show');
+    $crumbs->parent('admin.users.show', $user);
     $crumbs->push($user->name, route('admin.users.edit', $user));
 });

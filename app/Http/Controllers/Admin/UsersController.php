@@ -77,7 +77,7 @@ class UsersController extends Controller
             User::STATUS_ACTIVE => 'Active',
         ];
 
-        return redirect()->route('admin.users.edit', compact('user', 'statuses'));
+        return view('admin.users.edit', compact('user', 'statuses'));
     }
 
     /**
@@ -91,7 +91,7 @@ class UsersController extends Controller
     {
         $data = $this->validate($request, [
             'name'   => 'required|string|max:255',
-            'email'  => 'required|string|email|max:255|unique:users',
+            'email'  => 'required|string|email|max:255|unique:users,id,' . $user->id,
             'status' => [
                 'required',
                 'string',

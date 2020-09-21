@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Admin users</div>
 
-                <div class="card-body">
+    @include('admin.users.partials.nav')
 
-                    You are in admin panel!
-                </div>
-            </div>
-        </div>
-    </div>
+    {!! Form::open()->route('admin.users.store') !!}
+
+    {!! Form::text('name', 'Name') !!}
+    {!! Form::text('email', 'Email') !!}
+
+    {!! Form::submit("Save") !!}
+
+    {!! Form::close() !!}
+
 @endsection
