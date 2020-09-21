@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+
+// TODO: Из видео 3 с 3:55 (чуть раньше) - перенести сюда аутентификацию свою из трейта
 
 class LoginController extends Controller
 {
@@ -35,5 +39,22 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if (!$user->status !== User::STATUS_ACTIVE) {
+            $this->guard()->logout();
+            return back()->with('error', 'You need confirm your account. Please check your email!');
+        }
+
+        return redirect()->intended($this->redirectPath());
     }
 }
