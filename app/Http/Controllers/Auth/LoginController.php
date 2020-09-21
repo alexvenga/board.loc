@@ -3,58 +3,94 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
-
-// TODO: Из видео 3 с 3:55 (чуть раньше) - перенести сюда аутентификацию свою из трейта
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
-    use AuthenticatesUsers;
+    use ThrottlesLogins;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/cabinet';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
     }
 
     /**
-     * The user has been authenticated.
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Handle a login request to the application.
      *
      * @param \Illuminate\Http\Request $request
-     * @param mixed $user
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
-    protected function authenticated(Request $request, $user)
+    public function login(LoginRequest $request)
     {
-        if (!$user->status !== User::STATUS_ACTIVE) {
-            $this->guard()->logout();
-            return back()->with('error', 'You need confirm your account. Please check your email!');
+
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            $this->sendLockoutResponse($request);
         }
 
-        return redirect()->intended($this->redirectPath());
+        $authenticate = Auth::attempt(
+            $request->only(['email', 'password']),
+            $request->filled('remember')
+        );
+
+        if ($authenticate) {
+            $request->session()->regenerate();
+
+            $this->clearLoginAttempts($request);
+
+            $user = Auth::user();
+
+            if ($user->status !== User::STATUS_ACTIVE) {
+                Auth::logout();
+                return back()->with('error', 'You need confirm your account. Please check your email!');
+            }
+
+            return redirect()->intended(route('cabinet'));
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        throw ValidationException::withMessages([
+            'email' => [trans('auth.failed')],
+        ]);
     }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        return redirect()->route('home');
+    }
+
+    protected function username() {
+        return 'email';
+    }
+
 }
