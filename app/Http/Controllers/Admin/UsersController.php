@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Http\Requests\Admin\Users\UpdateRequest;
+use App\Http\UseCases\Auth\RegisterService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +13,18 @@ use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
+
+    private $register;
+
+    /**
+     * UsersController constructor.
+     * @param RegisterService $register
+     */
+    public function __construct(RegisterService $register)
+    {
+        $this->register = $register;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -113,7 +126,7 @@ class UsersController extends Controller
     public function verify(User $user)
     {
         try {
-            $user->verify();
+            $this->register->verify($user->id);
         } catch (\DomainException $e) {
             return redirect()->route('admin.users.show', $user)
                 ->with('error', $e->getMessage());
