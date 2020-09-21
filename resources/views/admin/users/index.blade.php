@@ -6,6 +6,13 @@
 
     @php /** @var \App\Models\User[] $users */ @endphp
 
+    <div class="d-flex flex-row justify-content-end mb-3">
+        <a class="btn btn-success mr-1"
+           href="{{ route('admin.users.create') }}">
+            Create user
+        </a>
+    </div>
+
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
