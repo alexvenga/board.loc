@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\User
@@ -57,4 +59,48 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'verify_token',
     ];
+
+    public static function register(string $name, string $email, string $password): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'verify_token' => Str::uuid(),
+            'status' => self::STATUS_WAIT,
+        ]);
+    }
+
+    public static function new($name, $email): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make(Str::random()),
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    public function isWait(): bool
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function verify(): void
+    {
+
+        if (!$this->isWait()) {
+            throw new \DomainException('User is already verified.');
+        }
+
+        $this->update([
+            'status' => self::STATUS_ACTIVE,
+            'verify_token' => null,
+        ]);
+    }
 }

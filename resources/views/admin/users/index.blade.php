@@ -36,10 +36,10 @@
                     {{ $user->email }}
                 </td>
                 <td>
-                    @if ($user->status === \App\Models\User::STATUS_WAIT)
+                    @if ($user->isWait())
                         <span class="badge badge-secondary">Waiting</span>
                     @endif
-                    @if ($user->status === \App\Models\User::STATUS_ACTIVE)
+                    @if ($user->isActive())
                         <span class="badge badge-primary">Active</span>
                     @endif
                 </td>

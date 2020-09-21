@@ -11,10 +11,14 @@
            href="{{ route('admin.users.edit', $user) }}">
             Edit
         </a>
+        <form class="mr-1" method="post" action="{{ route('admin.users.verify', $user) }}">
+            @csrf
+            <button class="btn btn-success" type="submit">Verify</button>
+        </form>
         <form class="mr-1" method="post" action="{{ route('admin.users.destroy', $user) }}">
             @csrf
             @method('DELETE')
-            <button class="btn btn-danger" type="submit">Delete</button>
+            <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?');">Delete</button>
         </form>
     </div>
 
@@ -49,10 +53,10 @@
                 Status
             </th>
             <td>
-                @if ($user->status === \App\Models\User::STATUS_WAIT)
+                @if ($user->isWait())
                     <span class="badge badge-secondary">Waiting</span>
                 @endif
-                @if ($user->status === \App\Models\User::STATUS_ACTIVE)
+                @if ($user->isActive())
                     <span class="badge badge-primary">Active</span>
                 @endif
             </td>

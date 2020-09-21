@@ -8,9 +8,7 @@ use App\Mail\Auth\VerifyMail;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 // TODO: Из видео 3 с 3:55 (чуть раньше) - перенести сюда аутентификацию свою из трейта
 
@@ -48,13 +46,11 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request)
     {
 
-        $user = User::create([
-            'name'         => $request['name'],
-            'email'        => $request['email'],
-            'password'     => Hash::make($request['password']),
-            'verify_token' => Str::random(),
-            'status'       => User::STATUS_WAIT,
-        ]);
+        $user = User::register(
+            $request['name'],
+            $request['email'],
+            $request['password']
+        );
 
         Mail::to($user->email)->send(new VerifyMail($user));
         event(new Registered($user));
@@ -75,15 +71,13 @@ class RegisterController extends Controller
                 ->with('error', 'Sorry your login cannot be identified.');
         }
 
-        if ($user->status != User::STATUS_WAIT) {
-            return redirect()
-                ->route('login')
-                ->with('error', 'Your email already verified.');
+        try {
+            $user->verify();
+        } catch (\DomainException $e) {
+            return redirect()->route('login')
+                ->with('error', $e->getMessage());
         }
 
-        $user->status = User::STATUS_ACTIVE;
-        $user->verify_token = null;
-        $user->save();
 
         return redirect()->route('login')
             ->with('success', 'Your email is verified. You can now login.');

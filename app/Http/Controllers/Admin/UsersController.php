@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Users\CreateRequest;
+use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -35,20 +38,16 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param CreateRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
 
-        $data = $this->validate($request, [
-            'name'  => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-        ]);
-
-        $data['status'] = User::STATUS_ACTIVE;
-
-        $user = User::create($data);
+        $user = User::create($request->only(['name', 'email']) + [
+                'password' => Hash::make(Str::random()),
+                'status'   => User::STATUS_ACTIVE
+            ]);
 
         return redirect()->route('admin.users.show', $user);
     }
@@ -72,34 +71,21 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $statuses = [
-            User::STATUS_WAIT   => 'Waiting',
-            User::STATUS_ACTIVE => 'Active',
-        ];
 
-        return view('admin.users.edit', compact('user', 'statuses'));
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateRequest $request
      * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateRequest $request, User $user)
     {
-        $data = $this->validate($request, [
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|string|email|max:255|unique:users,id,' . $user->id,
-            'status' => [
-                'required',
-                'string',
-                Rule::in([User::STATUS_ACTIVE, User::STATUS_WAIT]),
-            ],
-        ]);
 
-        $user->update($data);
+        $user->update($request->all());
 
         return redirect()->route('admin.users.show', $user);
     }
@@ -116,5 +102,23 @@ class UsersController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index');
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
+    public function verify(User $user)
+    {
+        try {
+            $user->verify();
+        } catch (\DomainException $e) {
+            return redirect()->route('admin.users.show', $user)
+                ->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('admin.users.show', $user);
     }
 }

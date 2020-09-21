@@ -15,9 +15,6 @@
     {!! Form::text('name', 'Name') !!}
     {!! Form::text('email', 'Email') !!}
 
-    {!! Form::select('status', 'Status')->options($statuses) !!}
-
-
     {!! Form::submit("Save") !!}
 
     {!! Form::close() !!}
