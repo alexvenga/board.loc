@@ -15,6 +15,9 @@
     {!! Form::text('name', 'Name') !!}
     {!! Form::text('email', 'Email') !!}
 
+    {!! Form::select('role', 'Role')->options($roles) !!}
+
+
     {!! Form::submit("Save") !!}
 
     {!! Form::close() !!}

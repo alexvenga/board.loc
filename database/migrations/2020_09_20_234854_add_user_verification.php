@@ -18,7 +18,7 @@ class AddUserVerification extends Migration
             $table->enum('status', [User::STATUS_WAIT, User::STATUS_ACTIVE])->default(User::STATUS_WAIT);
             $table->string('verify_token')->nullable()->unique();
         });
-        Db::table('users')->update([
+        DB::table('users')->update([
             'status' => User::STATUS_ACTIVE,
         ]);
     }

@@ -23,6 +23,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'password'       => Hash::make(Str::random()), // secret
         'remember_token' => Str::random(10),
         'verify_token'   => $active ? null : Str::uuid(),
+        'role'           => $active ? $faker->randomElement([User::ROLE_USER, User::ROLE_ADMIN]) : User::ROLE_USER,
         'status'         => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
     ];
 });
