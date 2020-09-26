@@ -11,4 +11,8 @@
         <a class="nav-link {{ request()->is('admin/regions*') ? 'active' : ''  ? 'active' : '' }}"
            href="{{ route('admin.regions.index') }}">Regions</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->is('admin/adverts/categories*') ? 'active' : ''  ? 'active' : '' }}"
+           href="{{ route('admin.adverts.categories.index') }}">Categories</a>
+    </li>
 </ul>

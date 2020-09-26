@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereSlug($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Region[] $children
+ * @property-read int|null $children_count
+ * @property-read \App\Models\Region|null $parent
  */
 class Region extends Model
 {

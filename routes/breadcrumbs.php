@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Adverts\Category;
 use App\Models\Region;
 use App\Models\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
@@ -89,4 +90,31 @@ Breadcrumbs::register('admin.regions.show', function (BreadcrumbsGenerator $crum
 Breadcrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crumbs, Region $region) {
     $crumbs->parent('admin.regions.show', $region);
     $crumbs->push($region->name, route('admin.regions.edit', $region));
+});
+
+////////// ADMIN CATEGORIES
+
+Breadcrumbs::register('admin.adverts.categories.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Categories', route('admin.adverts.categories.index'));
+});
+
+Breadcrumbs::register('admin.adverts.categories.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.adverts.categories.index');
+    $crumbs->push('Create category', route('admin.adverts.categories.create'));
+});
+
+Breadcrumbs::register('admin.adverts.categories.show', function (BreadcrumbsGenerator $crumbs, Category $category) {
+    $parent = $category->parent;
+    if ($parent) {
+        $crumbs->parent('admin.adverts.categories.show', $parent);
+    } else {
+        $crumbs->parent('admin.adverts.categories.index');
+    }
+    $crumbs->push($category->name, route('admin.adverts.categories.show', $category));
+});
+
+Breadcrumbs::register('admin.adverts.categories.edit', function (BreadcrumbsGenerator $crumbs, Category $category) {
+    $crumbs->parent('admin.adverts.categories.show', $category);
+    $crumbs->push($category->name, route('admin.adverts.categories.edit', $category));
 });
