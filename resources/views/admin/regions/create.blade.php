@@ -4,10 +4,10 @@
 
     @include('admin.partials.nav')
 
-    {!! Form::open()->route('admin.users.store') !!}
+    {!! Form::open()->route('admin.regions.store',['parent'=>$parent ? $parent->id : null]) !!}
 
     {!! Form::text('name', 'Name') !!}
-    {!! Form::text('email', 'Email') !!}
+    {!! Form::text('slug', 'Slug') !!}
 
     {!! Form::submit("Save") !!}
 

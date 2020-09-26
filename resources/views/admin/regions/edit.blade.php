@@ -7,16 +7,13 @@
     @include('admin.partials.nav')
 
     {!! Form::open()
-     ->route('admin.users.update', compact('user'))
+     ->route('admin.regions.update', compact('region'))
      ->method('put')
      ->autocomplete('off')
-     ->fill($user)!!}
+     ->fill($region)!!}
 
     {!! Form::text('name', 'Name') !!}
-    {!! Form::text('email', 'Email') !!}
-
-    {!! Form::select('role', 'Role')->options($roles) !!}
-
+    {!! Form::text('slug', 'slug') !!}
 
     {!! Form::submit("Save") !!}
 

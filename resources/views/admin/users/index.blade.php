@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @include('admin.users.partials.nav')
+    @include('admin.partials.nav')
 
     @php /** @var \App\Models\User[] $users */ @endphp
 

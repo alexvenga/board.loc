@@ -34,6 +34,8 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereVerifyToken($value)
+ * @property string $role
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRole($value)
  */
 class User extends Authenticatable
 {
