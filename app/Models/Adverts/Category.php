@@ -17,6 +17,17 @@ use Kalnoy\Nestedset\NodeTrait;
  * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Models\Adverts\Category newQuery()
  * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Models\Adverts\Category query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property int $_lft
+ * @property int $_rgt
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereSlug($value)
  */
 class Category extends Model
 {

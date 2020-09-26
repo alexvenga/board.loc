@@ -16,7 +16,11 @@ class CreateAdvertAttributesTable extends Migration
         Schema::create('advert_attributes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('category_id')->references('id')->on('advert_categories')->onDelete('cascade')->onUpdate('cascade');
-
+            $table->string('name');
+            $table->string('type');
+            $table->json('required');
+            $table->boolean('variants');
+            $table->integer('sort');
         });
     }
 
