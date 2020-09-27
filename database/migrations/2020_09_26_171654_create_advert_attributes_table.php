@@ -18,9 +18,11 @@ class CreateAdvertAttributesTable extends Migration
             $table->integer('category_id')->references('id')->on('advert_categories')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->string('type');
-            $table->json('required');
-            $table->boolean('variants');
+            $table->boolean('required');
+            $table->json('variants');
             $table->integer('sort');
+
+            $table->index(['category_id', 'name'])->unique();
         });
     }
 

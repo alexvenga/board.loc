@@ -41,9 +41,9 @@ class Attribute extends Model
     public static function typesList(): array
     {
         return [
-            self::TYPE_STRING,
-            self::TYPE_INTEGER,
-            self::TYPE_FLOAT,
+            self::TYPE_STRING  => 'String',
+            self::TYPE_INTEGER => 'Integer',
+            self::TYPE_FLOAT   => 'Float',
         ];
     }
 

@@ -14,7 +14,8 @@
     "laravel/framework": "5.6.*",
     "kalnoy/nestedset": "4.3.*",
     "laravel/tinker": "^1.0",
-    "netojose/laravel-bootstrap-4-forms": "^3.0"
+    "netojose/laravel-bootstrap-4-forms": "^3.0",
+    "ext-json": "*"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.4",

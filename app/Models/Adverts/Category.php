@@ -42,4 +42,22 @@ class Category extends Model
         'name', 'slug', 'parent_id'
     ];
 
+    public function parentAttributes(): array
+    {
+        return $this->parent ? $this->parent->allAttributes() : [];
+    }
+
+    public function allAttributes(): array
+    {
+        $parent = $this->parentAttributes();
+        $own = $this->attributes()->orderBy('sort')->getModels();
+
+        return array_merge($parent, $own);
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(Attribute::class, 'category_id', 'id');
+    }
+
 }
