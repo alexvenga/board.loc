@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
  * @mixin \Eloquent
  * @property int $id
  * @property string $name
+ * @property string $last_name
  * @property string $email
  * @property string $password
  * @property string|null $remember_token
@@ -53,7 +54,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'status', 'verify_token', 'role',
+        'name', 'last_name', 'email', 'password', 'status', 'verify_token', 'role',
     ];
 
     /**
@@ -62,7 +63,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'verify_token',
+        'password', 'remember_token',
     ];
 
     public static function register(string $name, string $email, string $password): self

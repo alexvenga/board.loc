@@ -30,9 +30,21 @@ Breadcrumbs::register('password.reset', function (BreadcrumbsGenerator $crumbs) 
     $crumbs->push('Change', route('password.reset'));
 });
 
-Breadcrumbs::register('cabinet', function (BreadcrumbsGenerator $crumbs) {
+// User cabinet
+
+Breadcrumbs::register('cabinet.home', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('home');
-    $crumbs->push('Cabinet', route('cabinet'));
+    $crumbs->push('Cabinet', route('cabinet.home'));
+});
+
+Breadcrumbs::register('cabinet.profile.home', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Profile', route('cabinet.profile.home'));
+});
+
+Breadcrumbs::register('cabinet.profile.edit', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.profile.home');
+    $crumbs->push(Auth::user()->name, route('cabinet.profile.edit'));
 });
 
 ////////// ADMIN USERS

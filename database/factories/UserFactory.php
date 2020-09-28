@@ -19,6 +19,7 @@ $factory->define(User::class, function (Faker $faker) {
     $active = $faker->boolean;
     return [
         'name'           => $faker->name,
+        'last_name'      => $faker->lastName,
         'email'          => $faker->unique()->safeEmail,
         'password'       => Hash::make('secret'), // secret
         'remember_token' => Str::random(10),

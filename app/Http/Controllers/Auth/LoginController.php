@@ -64,7 +64,7 @@ class LoginController extends Controller
                 return back()->with('error', 'You need confirm your account. Please check your email!');
             }
 
-            return redirect()->intended(route('cabinet'));
+            return redirect()->intended(route('cabinet.home'));
         }
 
         $this->incrementLoginAttempts($request);
