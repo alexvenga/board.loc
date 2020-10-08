@@ -17,14 +17,21 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     $active = $faker->boolean;
+    $phoneActive = $faker->boolean;
     return [
         'name'           => $faker->name,
         'last_name'      => $faker->lastName,
         'email'          => $faker->unique()->safeEmail,
+        'phone'          => $faker->unique()->phoneNumber,
+        'phone_verified' => $phoneActive,
         'password'       => Hash::make('secret'), // secret
         'remember_token' => Str::random(10),
         'verify_token'   => $active ? null : Str::uuid(),
-        'role'           => $active ? $faker->randomElement([User::ROLE_USER, User::ROLE_ADMIN]) : User::ROLE_USER,
-        'status'         => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
+
+        'phone_verify_token'         => $phoneActive ? null : Str::uuid(),
+        'phone_verify_token_expire' => $phoneActive ? null : \Carbon\Carbon::now()->addSeconds(300),
+
+        'role'   => $active ? $faker->randomElement([User::ROLE_USER, User::ROLE_ADMIN]) : User::ROLE_USER,
+        'status' => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
     ];
 });

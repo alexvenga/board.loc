@@ -28,6 +28,8 @@ use Kalnoy\Nestedset\NodeTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereRgt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Adverts\Category whereSlug($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Adverts\Attribute[] $attributes
+ * @property-read int|null $attributes_count
  */
 class Category extends Model
 {

@@ -12,6 +12,7 @@
 
     {!! Form::text('name', 'First name') !!}
     {!! Form::text('last_name', 'Last name') !!}
+    {!! Form::text('phone', 'Phone') !!}
 
     {!! Form::submit("Save") !!}
 

@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,13 +18,18 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string $last_name
  * @property string $email
+ * @property string|null $phone
+ * @property bool $phone_auth
+ * @property bool $phone_verified
  * @property string $password
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string $status
  * @property string|null $verify_token
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property string|null $phone_verify_token
+ * @property Carbon|null $phone_verify_token_expire
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -37,6 +45,11 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereVerifyToken($value)
  * @property string $role
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhoneVerified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhoneVerifyExpire($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePhoneVerifyToken($value)
  */
 class User extends Authenticatable
 {
@@ -54,7 +67,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'last_name', 'email', 'password', 'status', 'verify_token', 'role',
+        'name',
+        'last_name',
+        'email',
+        'phone_verified',
+        'phone',
+        'password',
+        'verify_token',
+        //'phone_verify_token',
+        //'phone_verify_expire',
+        'status',
+        'role',
     ];
 
     /**
@@ -64,6 +87,12 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $casts = [
+        'phone_auth'                => 'boolean',
+        'phone_verified'            => 'boolean',
+        'phone_verify_token_expire' => 'datetime',
     ];
 
     public static function register(string $name, string $email, string $password): self
@@ -123,9 +152,84 @@ class User extends Authenticatable
         $this->update(['role' => $role]);
     }
 
+    public function unverifyPhone(): void
+    {
+
+        $this->phone_verified = false;
+        $this->verify_token = null;
+        $this->phone_verify_token_expire = null;
+
+        $this->saveOrFail();
+    }
+
+    public function requestPhoneVerification(Carbon $now): string
+    {
+
+        if (empty($this->phone)) {
+            throw new \DomainException('Phone number is empty');
+        }
+
+        if (
+            !empty($this->phone_verify_token) &&
+            $this->phone_verify_token_expire &&
+            $this->phone_verify_token_expire->gt($now)
+        ) {
+            throw new \DomainException('Token is already requested.');
+        }
+
+        $this->phone_verified = false;
+        $this->phone_verify_token = (string)random_int(10000, 99999);
+        $this->phone_verify_token_expire = $now->copy()->addSeconds(300);
+        $this->saveOrFail();
+
+        return $this->phone_verify_token;
+    }
+
+    public function verifyPhone($token, Carbon $now): void
+    {
+
+        if ($token !== $this->phone_verify_token) {
+            throw new \DomainException('Incorrect verify token.');
+        }
+        if ($this->phone_verify_token_expire->lt($now)) {
+            throw new \DomainException('Token is expired');
+        }
+
+        $this->phone_verified = true;
+        $this->verify_token = null;
+        $this->phone_verify_token_expire = null;
+
+        $this->saveOrFail();
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isPhoneVerified(): bool
+    {
+        return $this->phone_verified;
+    }
+
+    public function isPhoneAuthEnabled(): bool
+    {
+        return $this->phone_auth;
+    }
+
+    public function enablePhoneAuth(): void
+    {
+        if (!empty($this->phone) && !$this->isPhoneVerified()) {
+            throw new \DomainException('Phone number is empty.');
+        }
+        $this->phone_auth = true;
+        $this->saveOrFail();
+    }
+
+    public function disablePhoneAuth(): void
+    {
+        $this->phone_auth = false;
+        $this->saveOrFail();
     }
 
 }

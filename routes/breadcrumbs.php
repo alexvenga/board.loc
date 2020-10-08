@@ -20,6 +20,11 @@ Breadcrumbs::register('login', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->push('Login', route('login'));
 });
 
+Breadcrumbs::register('login.phone', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('login');
+    $crumbs->push('Confirm phone', route('login.phone'));
+});
+
 Breadcrumbs::register('password.request', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('login');
     $crumbs->push('Reset Password', route('password.request'));
@@ -45,6 +50,11 @@ Breadcrumbs::register('cabinet.profile.home', function (BreadcrumbsGenerator $cr
 Breadcrumbs::register('cabinet.profile.edit', function (BreadcrumbsGenerator $crumbs) {
     $crumbs->parent('cabinet.profile.home');
     $crumbs->push(Auth::user()->name, route('cabinet.profile.edit'));
+});
+
+Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.profile.home');
+    $crumbs->push('Verify phone', route('cabinet.profile.phone'));
 });
 
 ////////// ADMIN USERS

@@ -16,6 +16,9 @@ Route::get('/', 'HomeController@index')->name('home');
 Auth::routes();
 Route::get('/verify/{token}', 'Auth\RegisterController@verify')->name('register.verify');
 
+Route::get('/login/phone', 'Auth\LoginController@phone')->name('login.phone');
+Route::post('/login/phone', 'Auth\LoginController@verify')->name('login.phone');
+
 
 Route::group(
     [
@@ -27,15 +30,20 @@ Route::group(
     function () {
         Route::get('/', 'HomeController@index')->name('home');
 
+
         Route::group(
             [
-                'prefix'    => 'profile',
-                'as'        => 'profile.'
+                'prefix' => 'profile',
+                'as'     => 'profile.'
             ],
             function () {
                 Route::get('/', 'ProfileController@index')->name('home');
                 Route::get('/edit', 'ProfileController@edit')->name('edit');
                 Route::put('/update', 'ProfileController@update')->name('update');
+                Route::post('/phone', 'PhoneController@request');
+                Route::get('/phone', 'PhoneController@form')->name('phone');
+                Route::post('/phone/auth', 'PhoneController@auth')->name('phone.auth');
+                Route::put('/phone', 'PhoneController@verify')->name('phone.verify');
             });
     });
 
