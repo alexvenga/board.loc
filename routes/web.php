@@ -11,6 +11,8 @@
 |
 */
 
+use App\Http\Middleware\FilledProfile;
+
 Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
@@ -44,6 +46,18 @@ Route::group(
                 Route::get('/phone', 'PhoneController@form')->name('phone');
                 Route::post('/phone/auth', 'PhoneController@auth')->name('phone.auth');
                 Route::put('/phone', 'PhoneController@verify')->name('phone.verify');
+            });
+
+
+        Route::group(
+            [
+                'namespace'  => 'Adverts',
+                'prefix'     => 'adverts',
+                'as'         => 'adverts.',
+                'middleware' => [FilledProfile::class],
+            ],
+            function () {
+                Route::get('', 'AdvertsController@index')->name('index');
             });
     });
 

@@ -57,6 +57,13 @@ Breadcrumbs::register('cabinet.profile.phone', function (BreadcrumbsGenerator $c
     $crumbs->push('Verify phone', route('cabinet.profile.phone'));
 });
 
+// Adverts //////
+
+Breadcrumbs::register('cabinet.adverts.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('cabinet.home');
+    $crumbs->push('Adverts', route('cabinet.adverts.index'));
+});
+
 ////////// ADMIN USERS
 
 Breadcrumbs::register('admin.home', function (BreadcrumbsGenerator $crumbs) {
